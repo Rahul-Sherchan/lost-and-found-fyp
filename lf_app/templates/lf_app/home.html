@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lost & Found</title>
+</head>
+<body>
+    <h1>Welcome to Lost & Found</h1>
+    <nav>
+        <a href="{% url 'home' %}">Home</a> |
+        <a href="{% url 'lost_items' %}">Lost Items</a> |
+        <a href="{% url 'found_items' %}">Found Items</a> |
+        {% if user.is_authenticated %}
+            <a href="{% url 'report_lost' %}">Report Lost</a> |
+            <a href="{% url 'report_found' %}">Report Found</a> |
+            <a href="{% url 'my_reports' %}">My Reports</a> |
+            <a href="{% url 'admin:logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'admin:login' %}">Login</a>
+        {% endif %}
+    </nav>
+    
+    <h2>Recent Lost Items</h2>
+    {% for item in recent_lost %}
+        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+            <h3><a href="{% url 'item_detail' 'lost' item.id %}">{{ item.item_name }}</a></h3>
+            <p>{{ item.description|truncatewords:20 }}</p>
+            <small>Lost on: {{ item.date_lost }} at {{ item.location_lost }}</small>
+        </div>
+    {% empty %}
+        <p>No lost items reported recently.</p>
+    {% endfor %}
+    
+    <h2>Recent Found Items</h2>
+    {% for item in recent_found %}
+        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+            <h3><a href="{% url 'item_detail' 'found' item.id %}">{{ item.item_name }}</a></h3>
+            <p>{{ item.description|truncatewords:20 }}</p>
+            <small>Found on: {{ item.date_found }} at {{ item.location_found }}</small>
+        </div>
+    {% empty %}
+        <p>No found items reported recently.</p>
+    {% endfor %}
+</body>
+</html>
